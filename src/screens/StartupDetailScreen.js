@@ -13,12 +13,14 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { ProgressBar, Card } from 'react-native-paper';
 import * as Animatable from 'react-native-animatable';
-
+import { Video, ResizeMode } from 'expo-av';
 const { width, height } = Dimensions.get('window');
 
 const StartupDetailScreen = ({ route, navigation }) => {
   const { startup } = route.params;
   const [activeTab, setActiveTab] = useState('Overview');
+  const video = React.useRef(null);
+  const [status, setStatus] = React.useState({});
 
   // Mock financial projections data
   const financialProjections = [
@@ -34,6 +36,13 @@ const StartupDetailScreen = ({ route, navigation }) => {
     competitiveLandscape: 'Faible concurrence',
     targetCustomers: 'Entreprises PME et grands groupes',
   };
+
+  // Mock documents data
+  const documents = [
+    { name: 'Business Plan', type: 'PDF', size: '2.3 MB', date: '15/03/2024' },
+    { name: 'Présentation Investisseurs', type: 'PPTX', size: '5.1 MB', date: '10/02/2024' },
+    { name: 'États Financiers', type: 'XLSX', size: '1.7 MB', date: '05/01/2024' },
+  ];
 
   const renderOverviewTab = () => (
     <Animatable.View animation="fadeIn" style={styles.tabContent}>
@@ -149,12 +158,99 @@ const StartupDetailScreen = ({ route, navigation }) => {
     </Animatable.View>
   );
 
+  const renderVideoTab = () => {
+
+  
+    return (
+      <Animatable.View animation="fadeIn" style={styles.tabContent}>
+        <Text style={styles.sectionTitle}>Présentation Vidéo</Text>
+        <View style={styles.videoContainer}>
+          <Video
+            ref={video}
+            style={styles.video}
+            source={require('../../assets/Nahawa.mp4')} 
+            useNativeControls
+            resizeMode={ResizeMode.CONTAIN}
+            isLooping
+            onPlaybackStatusUpdate={status => setStatus(() => status)}
+          />
+          
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity 
+              style={styles.button} 
+              onPress={() =>
+                status.isPlaying ? video.current.pauseAsync() : video.current.playAsync()
+              }
+            >
+              <MaterialCommunityIcons 
+                name={status.isPlaying ? "pause" : "play"} 
+                size={24} 
+                color="white" 
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+        <Text style={styles.videoDescriptionText}>
+          Découvrez en quelques minutes l'histoire, la vision et les ambitions de {startup.name}.
+        </Text>
+      </Animatable.View>
+    );
+  };
+
+  const renderDocumentsTab = () => (
+    <Animatable.View animation="fadeIn" style={styles.tabContent}>
+      <Text style={styles.sectionTitle}>Documents</Text>
+      {documents.map((doc, index) => (
+        <Card key={index} style={styles.documentCard}>
+          <Card.Content style={styles.documentCardContent}>
+            <View style={styles.documentIconContainer}>
+              <MaterialCommunityIcons 
+                name={
+                  doc.type === 'PDF' ? 'file-pdf-box' : 
+                  doc.type === 'PPTX' ? 'file-powerpoint-box' : 
+                  doc.type === 'XLSX' ? 'file-excel-box' : 
+                  'file-document'
+                } 
+                size={40} 
+                color="#4A148C" 
+              />
+            </View>
+            <View style={styles.documentDetails}>
+              <Text style={styles.documentName}>{doc.name}</Text>
+              <View style={styles.documentMetaContainer}>
+                <Text style={styles.documentMeta}>{doc.type}</Text>
+                <Text style={styles.documentMeta}>{doc.size}</Text>
+                <Text style={styles.documentMeta}>{doc.date}</Text>
+              </View>
+            </View>
+            <TouchableOpacity style={styles.downloadButton}>
+              <MaterialCommunityIcons name="download" size={24} color="#4A148C" />
+            </TouchableOpacity>
+          </Card.Content>
+        </Card>
+      ))}
+      <TouchableOpacity style={styles.uploadDocumentButton}>
+        <LinearGradient
+          colors={['#4A148C', '#7B1FA2']}
+          style={styles.gradientButton}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+        >
+          <Text style={styles.uploadDocumentButtonText}>Télécharger un Document</Text>
+          <MaterialCommunityIcons name="upload" size={20} color="white" />
+        </LinearGradient>
+      </TouchableOpacity>
+    </Animatable.View>
+  );
+
   const renderTabContent = () => {
     switch(activeTab) {
       case 'Overview': return renderOverviewTab();
       case 'Financials': return renderFinancialsTab();
       case 'Market': return renderMarketTab();
       case 'Founder': return renderFounderTab();
+      case 'Documents': return renderDocumentsTab();
+      case 'Video': return renderVideoTab(); // Nouveau cas
       default: return renderOverviewTab();
     }
   };
@@ -163,7 +259,9 @@ const StartupDetailScreen = ({ route, navigation }) => {
     { name: 'Overview', icon: 'information' },
     { name: 'Financials', icon: 'chart-bar' },
     { name: 'Market', icon: 'earth' },
-    { name: 'Founder', icon: 'account' }
+    { name: 'Founder', icon: 'account' },
+    { name: 'Documents', icon: 'file-document' },
+    { name: 'Video', icon: 'video' } // Nouvel onglet
   ];
 
   return (
@@ -184,38 +282,43 @@ const StartupDetailScreen = ({ route, navigation }) => {
           <Text style={styles.startupSector}>{startup.sector}</Text>
         </View>
 
-        <View style={styles.tabContainer}>
-          {tabs.map(tab => (
-            <TouchableOpacity
-              key={tab.name}
-              style={[
-                styles.tabItem,
-                activeTab === tab.name && styles.activeTabItem
-              ]}
-              onPress={() => setActiveTab(tab.name)}
-            >
-              <MaterialCommunityIcons 
-                name={tab.icon} 
-                size={20} 
-                color={activeTab === tab.name ? '#4A148C' : 'white'} 
-              />
-              <Text 
-                style={[
-                  styles.tabText,
-                  activeTab === tab.name && styles.activeTabText
-                ]}
-              >
-                {tab.name}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+        <ScrollView 
+  horizontal 
+  showsHorizontalScrollIndicator={false}
+  style={styles.tabScrollContainer}
+>
+  {tabs.map(tab => (
+    <TouchableOpacity
+      key={tab.name}
+      style={[
+        styles.tabItem,
+        activeTab === tab.name && styles.activeTabItem
+      ]}
+      onPress={() => setActiveTab(tab.name)}
+    >
+      <MaterialCommunityIcons 
+        name={tab.icon} 
+        size={20} 
+        color={activeTab === tab.name ? '#4A148C' : 'white'} 
+      />
+      <Text 
+        style={[
+          styles.tabText,
+          activeTab === tab.name && styles.activeTabText
+        ]}
+      >
+        {tab.name}
+      </Text>
+    </TouchableOpacity>
+  ))}
+</ScrollView>
       </LinearGradient>
 
       <ScrollView 
         style={styles.contentContainer}
         contentContainerStyle={styles.scrollViewContent}
       >
+        
         {renderTabContent()}
         
         <TouchableOpacity style={styles.contactButton}>
@@ -409,6 +512,111 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     marginRight: 10,
+  },
+  // Nouveaux styles pour l'onglet Documents
+  documentCard: {
+    marginBottom: 16,
+    backgroundColor: 'white',
+  },
+  documentCardContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  documentIconContainer: {
+    marginRight: 16,
+  },
+  documentDetails: {
+    flex: 1,
+  },
+  documentName: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#4A148C',
+  },
+  documentMetaContainer: {
+    flexDirection: 'row',
+    marginTop: 8,
+  },
+  documentMeta: {
+    color: '#666',
+    marginRight: 12,
+    fontSize: 12,
+  },
+  downloadButton: {
+    padding: 8,
+  },
+  uploadDocumentButton: {
+    marginTop: 20,
+    marginHorizontal: 16,
+    borderRadius: 12,
+    overflow: 'hidden',
+  },
+  uploadDocumentButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    marginRight: 10,
+  },
+  tabScrollContainer: {
+    flexGrow: 0,
+    paddingHorizontal: 16,
+    paddingTop:10
+  },
+  tabItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
+
+    paddingHorizontal: 15,
+    borderRadius: 20,
+    marginRight: 10, // Space between tabs
+  },
+  videoCard: {
+    backgroundColor: 'white',
+    marginBottom: 16,
+  },
+  videoContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 200,
+    backgroundColor: '#F3E5F5',
+    borderRadius: 12,
+  },
+  videoPlaceholderText: {
+    marginTop: 16,
+    color: '#4A148C',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  playButton: {
+    position: 'absolute',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  videoDescriptionText: {
+    textAlign: 'center',
+    color: '#666',
+    marginHorizontal: 16,
+    lineHeight: 22,
+  },
+  videoContainer: {
+    borderRadius: 12,
+    overflow: 'hidden',
+    marginHorizontal: 16,
+    backgroundColor: 'black',
+  },
+  video: {
+    width: '100%',
+    height: 250,
+  },
+  buttonContainer: {
+    position: 'absolute',
+    bottom: 10,
+    right: 10,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    borderRadius: 30,
+  },
+  button: {
+    padding: 10,
   },
 });
 

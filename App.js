@@ -12,14 +12,16 @@ import Navigators from './src/screens/Navigators';
 import DocumentUploadScreen from './src/screens/DocumentUploadScreen';
 import StartupListingScreen from './src/screens/StartupListingScreen';
 import StartupDetailScreen from './src/screens/StartupDetailScreen';
+//import StartupMarketDashboard from './src/screens/StartupMarketDashboard';
 import BusinessAngelListScreen from './src/screens/BusinessAngelListScreen';
 const windowWidth = Dimensions.get('window').width;
 import BusinessAngelPortfolioScreen from './src/screens/BusinessAngelPortfolioScreen';
+import BusinessAngelProfileScreen from './src/screens/BusinessAngelProfileScreen';
 const windowHeight = Dimensions.get('window').height;
 
 export default function App() {
   return (
-    <Navigators />
+    <BusinessAngelPortfolioScreen />
   );
 }
 

@@ -22,25 +22,36 @@ const { width, height } = Dimensions.get('window');
 const MOCK_STARTUPS = [
   {
     id: '1',
-    name: 'EcoTech Solutions',
-    sector: 'GreenTech',
-    fundingNeeded: '500 000 €',
-    description: 'Développement de technologies durables pour réduire l\'empreinte carbone des entreprises.',
-    founder: 'Marie Dupont',
+    name: 'Visitrack360',
+    sector: 'SocialNetwork',
+    fundingNeeded: '500 000 FCFA',
+    description: 'Mise en place de plateforme pour la gestion des supports publicitaires',
+    founder: 'Diabagate',
     logo: require('../../assets/1.jpeg'), // Replace with actual logo path
     fundingStage: 'Pré-amorçage',
-    totalFundRaised: '100 000 €'
+    totalFundRaised: '100 000 FCFA'
   },
   {
     id: '2',
-    name: 'MedAI Innovations',
-    sector: 'HealthTech',
-    fundingNeeded: '750 000 €',
+    name: 'Lanfiatech',
+    sector: 'Finance',
+    fundingNeeded: '1000 000 FCFA',
     description: 'Intelligence artificielle pour le diagnostic précoce des maladies.',
-    founder: 'Dr. Jean Martin',
+    founder: 'Diabagate',
     logo: require('../../assets/2.jpeg'), // Replace with actual logo path
     fundingStage: 'Amorçage',
-    totalFundRaised: '250 000 €'
+    totalFundRaised: '300 000 FCFA'
+  },
+  {
+    id: '3',
+    name: 'Myhot',
+    sector: 'Social',
+    fundingNeeded: '1000 000 FCFA',
+    description: 'Gestion hotel et de residence meublée.',
+    founder: 'Issa Ouedraogo',
+    logo: require('../../assets/3.jpeg'), // Replace with actual logo path
+    fundingStage: 'Amorçage',
+    totalFundRaised: '300 000 FCFA'
   },
   // Add more startup entries
 ];

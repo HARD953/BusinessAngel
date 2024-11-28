@@ -68,8 +68,8 @@ const BusinessAngelLoginScreen = ({ navigation }) => {
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.logoContainer}>
-          <Text style={styles.brandName}>StartupConnect</Text>
-          <Text style={styles.subtitle}>Plateforme de connexion pour Business Angels et Startuppeur</Text>
+          <Text style={styles.brandName}>RANCO</Text>
+          <Text style={styles.subtitle}>Votre plateforme de connexion pour Business Angels, Startuppeur et TPE</Text>
             <Image 
               source={require('../../assets/image.png')} 
               style={styles.logo} 
@@ -167,14 +167,14 @@ const BusinessAngelLoginScreen = ({ navigation }) => {
               <Text style={styles.ssoButtonText}>Créer un compte investisseur</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity 
+            {/* <TouchableOpacity 
               style={styles.ssoButton}
               activeOpacity={0.7}
               onPress={() => navigation.navigate('StartupSignupScreen')}
             >
               <MaterialCommunityIcons name="account-plus" size={24} color="#4A148C" />
               <Text style={styles.ssoButtonText}>Créer un compte Startuppeur</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
             <View style={styles.helpContainer}>
               <MaterialCommunityIcons name="help-circle-outline" size={20} color="#666" />
