@@ -21,7 +21,7 @@ const windowHeight = Dimensions.get('window').height;
 
 export default function App() {
   return (
-    <BusinessAngelPortfolioScreen />
+    <Navigators />
   );
 }
 
